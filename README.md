@@ -32,7 +32,9 @@ kedro_mnist/
 │   │   └── training/          # обучение XGBoost + метрики
 │   ├── hooks.py               # логирование git-коммита в MLflow
 │   └── settings.py
-├── mlruns/                    # локальное хранилище MLflow (в .gitignore)
+├── mlflow.db                  # трекинг-стор MLflow, sqlite (в .gitignore)
+├── mlruns/                    # артефакты MLflow (в .gitignore)
+├── check_reproducibility.py   # прогон обучения дважды + сверка метрик
 └── pyproject.toml             # poetry
 ```
 
@@ -79,7 +81,7 @@ poetry run kedro run
 Посмотреть эксперименты:
 
 ```bash
-poetry run mlflow ui --backend-store-uri mlruns
+poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
 # затем открыть http://127.0.0.1:5000
 ```
 
@@ -88,7 +90,8 @@ poetry run mlflow ui --backend-store-uri mlruns
 ## MLflow
 
 Подключён через плагин **kedro-mlflow** (`conf/base/mlflow.yml`):
-- локальный трекинг-стор — папка `mlruns/` в корне проекта, артефакты тоже локально;
+- локальный трекинг-стор — БД `mlflow.db` (sqlite) в корне проекта;
+  артефакты (модель, матрица ошибок) — локально в `mlruns/`;
 - параметры пайплайнов и метрики логируются автоматически;
 - модель и матрица ошибок логируются как артефакты (обёртка
   `MlflowArtifactDataset` в каталоге);
