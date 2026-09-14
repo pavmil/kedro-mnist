@@ -1,0 +1,53 @@
+# Data Catalog: где какой датасет лежит.
+# https://docs.kedro.org/en/stable/catalog-data/introduction/
+
+# ---------- сырые данные ----------
+mnist_raw:
+  type: pandas.ParquetDataset
+  filepath: data/01_raw/mnist_raw.parquet
+
+# ---------- промежуточные (после сплита) ----------
+mnist_train_raw:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/mnist_train_raw.parquet
+
+mnist_test_raw:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/mnist_test_raw.parquet
+
+# ---------- вход в модель (после подготовки) ----------
+X_train:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/X_train.parquet
+y_train:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/y_train.parquet
+X_test:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/X_test.parquet
+y_test:
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/y_test.parquet
+
+# ---------- модель: сохраняем локально И логируем как артефакт в MLflow ----------
+model:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pickle.PickleDataset
+    filepath: data/06_models/xgb_model.pkl
+
+# ---------- метрики: логируются в MLflow ----------
+metrics:
+  type: kedro_mlflow.io.metrics.MlflowMetricsHistoryDataset
+
+# ---------- метрики: локальная копия для просмотра ----------
+metrics_report:
+  type: json.JSONDataset
+  filepath: data/08_reporting/metrics.json
+
+# ---------- матрица ошибок: локально + артефакт в MLflow ----------
+confusion_matrix:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: matplotlib.MatplotlibWriter
+    filepath: data/08_reporting/confusion_matrix.png
