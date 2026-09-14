@@ -49,5 +49,5 @@ metrics_report:
 confusion_matrix:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:
-    type: matplotlib.MatplotlibWriter
+    type: matplotlib.MatplotlibDataset
     filepath: data/08_reporting/confusion_matrix.png
