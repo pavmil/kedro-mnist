@@ -92,7 +92,8 @@ poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
 Подключён через плагин **kedro-mlflow** (`conf/base/mlflow.yml`):
 - локальный трекинг-стор — БД `mlflow.db` (sqlite) в корне проекта;
   артефакты (модель, матрица ошибок) — локально в `mlruns/`;
-- параметры пайплайнов и метрики логируются автоматически;
+- параметры пайплайнов логируются автоматически (kedro-mlflow), метрики — из
+  ноды `evaluate_model` через `mlflow.log_metrics`;
 - модель и матрица ошибок логируются как артефакты (обёртка
   `MlflowArtifactDataset` в каталоге);
 - **git-коммит запуска** пишется в теги рана (`git_commit`, `git_branch`,
