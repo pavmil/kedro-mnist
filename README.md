@@ -1,13 +1,10 @@
-# kedro_mnist — шаблон Kedro + MLflow на MNIST
+# kedro_mnist — пайплайн Kedro + MLflow на MNIST
 
-Тестовый, но «боевой по форме» репозиторий-шаблон: два пайплайна Kedro
-(сбор данных и обучение модели), управление зависимостями через **poetry**,
-логирование в **MLflow** (включая git-коммит запуска) и строгая
-**воспроизводимость** метрик.
+Два пайплайна Kedro (сбор данных и обучение модели), управление зависимостями через poetry,
+логирование в MLflow и строгая воспроизводимость.
 
-Модель-заглушка — **XGBoost на пикселях MNIST** (каждая картинка 28×28 = 784
-признака). Каркас model-agnostic: на место `training` позже встаёт любая модель
-(бустинги, RNN/LSTM+attention и т.д.) без переделки инфраструктуры.
+Модель - XGBoost на пикселях MNIST (каждая картинка 28×28 = 784
+признака)
 
 ---
 
@@ -35,7 +32,7 @@ kedro_mnist/
 ├── mlflow.db                  # трекинг-стор MLflow, sqlite (в .gitignore)
 ├── mlruns/                    # артефакты MLflow (в .gitignore)
 ├── check_reproducibility.py   # прогон обучения дважды + сверка метрик
-└── pyproject.toml             # poetry
+└── pyproject.toml             # poetry конфиг
 ```
 
 Два пайплайна (`kedro registry list`):
@@ -104,9 +101,9 @@ poetry run mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 ## Воспроизводимость
 
-Перезапуск даёт **побитово те же метрики**. Как это обеспечено:
+Перезапуск даёт те же метрики. Как это обеспечено:
 - источник данных зафиксирован (`fetch_openml('mnist_784', version=1)`),
-  порядок строк канонический, сплит по позиции — без рандома;
+  порядок строк канонический, сплит без рандома;
 - XGBoost: фиксированный `random_state`, `n_jobs=1`, без стохастического
   сэмплирования (`subsample=1.0`, `colsample_bytree=1.0`);
 - все гиперпараметры — в `conf/base/parameters_training.yml`;
@@ -120,7 +117,7 @@ poetry run python check_reproducibility.py
 
 ---
 
-## Как адаптировать под свою модель
+## Как адаптировать под другую модель
 
 1. Заменить ноды в `src/kedro_mnist/pipelines/training/nodes.py`
    (`train_model`, `evaluate_model`) на свою модель.
