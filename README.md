@@ -55,17 +55,11 @@ poetry install
 ```
 
 > **macOS:** `xgboost` линкуется к нативному рантайму OpenMP (`libomp`), которого
-> нет в системе по умолчанию и который **не** ставится через `poetry` (его нет в
-> `poetry.lock`). Перед пайплайном `training` установите его через Homebrew:
+> нет в системе по умолчанию и который **не** ставится через `poetry`. Перед пайплайном `training` установите его через Homebrew:
 >
 > ```bash
 > brew install libomp
 > ```
->
-> Без него `training` падает на импорте xgboost с
-> `XGBoostError: libxgboost.dylib could not be loaded ... libomp.dylib`.
-> На Windows и Linux рантайм OpenMP входит в состав колеса `xgboost` —
-> дополнительных действий не требуется.
 
 Poetry создаёт локальный `.venv` в папке проекта. Точные версии всех
 пакетов зафиксированы в `poetry.lock` — это основа воспроизводимости.
